@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/student_database.dir/source/main.cpp.o CMakeFiles/student_database.dir/source/peselValidator.cpp.o CMakeFiles/student_database.dir/source/dataBase.cpp.o CMakeFiles/student_database.dir/source/student.cpp.o -o student_database 
