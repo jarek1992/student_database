@@ -1,3 +1,0 @@
-/home/jarek1992/JAREK/student_database/build/CMakeFiles/student_database.dir
-/home/jarek1992/JAREK/student_database/build/CMakeFiles/edit_cache.dir
-/home/jarek1992/JAREK/student_database/build/CMakeFiles/rebuild_cache.dir
