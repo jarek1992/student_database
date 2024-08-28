@@ -294,7 +294,7 @@ void StudentDataBase::sortAndDisplayBySurname() const {
 }
 
 void StudentDataBase::saveToFile(const std::string& students_DataBase) const {
-    std::fstream dataBase("students_DataBase.txt", dataBase.out);
+    std::fstream dataBase(students_DataBase, std::ios::out);
 
     if (!dataBase.is_open()) {
         throw std::runtime_error("could not open file for writing");
@@ -322,7 +322,7 @@ void StudentDataBase::saveToFile(const std::string& students_DataBase) const {
 }
 
 void StudentDataBase::loadFromFile(const std::string& students_DataBase) {
-    std::fstream dataBase("students_DataBase.txt", dataBase.in);
+    std::fstream dataBase("students_DataBase.txt", std::ios::in);
 
     if (!dataBase.is_open()) {
         throw std::runtime_error("could not open file to load");
@@ -332,31 +332,59 @@ void StudentDataBase::loadFromFile(const std::string& students_DataBase) {
     std::string line;
 
     while (std::getline(dataBase, line)) {
-        std::stringstream ss(line);
+        if (line.empty() || line == "----------------------------------") {
+            continue;
+        }
+
         std::string name, surname, address, zipcode, city, nationality, indexNumber, pesel, genderStr;
         size_t day, month, year;
         Gender gender = Gender::Unknown;
 
-        std::getline(ss, name);
-        std::getline(ss, surname);
-        ss >> day;
-        ss.ignore();
-        ss >> month;
-        ss.ignore();
-        ss >> year;
-        ss.ignore();
-        std::getline(ss, address);
-        std::getline(ss, zipcode);
-        std::getline(ss, city);
-        std::getline(ss, nationality);
-        std::getline(ss, indexNumber);
-        std::getline(ss, pesel);
-        std::getline(ss, genderStr);
-
-        if (genderStr == "Male") {
-            gender = Gender::Male;
-        } else if (genderStr == "Female") {
-            gender = Gender::Female;
+        if (line.find("Name: ") == 0) {
+            name = line.substr(6);
+        }
+        std::getline(dataBase, line);  // get surname
+        if (line.find("Surname: ") == 0) {
+            surname = line.substr(9);
+        }
+        std::getline(dataBase, line);  // get birth date
+        if (line.find("Birth date: ") == 0) {
+            std::sscanf(line.c_str(), "Birth date: %zu-%zu-%zu", &day, &month, &year);
+        }
+        std::getline(dataBase, line);  // get address
+        if (line.find("Address: ") == 0) {
+            address = line.substr(9);
+        }
+        std::getline(dataBase, line);  // get zipcode
+        if (line.find("Zipcode: ") == 0) {
+            zipcode = line.substr(9);
+        }
+        std::getline(dataBase, line);  // get city
+        if (line.find("City: ") == 0) {
+            city = line.substr(6);
+        }
+        std::getline(dataBase, line);  // get nationality
+        if (line.find("Nationality: ") == 0) {
+            nationality = line.substr(13);
+        }
+        std::getline(dataBase, line);  // get index number
+        if (line.find("Index Number: ") == 0) {
+            indexNumber = line.substr(14);
+        }
+        std::getline(dataBase, line);  // get pesel
+        if (line.find("Pesel: ") == 0) {
+            pesel = line.substr(7);
+        }
+        std::getline(dataBase, line);  // get gender
+        if (line.find("Gender: ") == 0) {
+            genderStr = line.substr(8);
+            if (genderStr == "Male") {
+                gender = Gender::Male;
+            } else if (genderStr == "Female") {
+                gender = Gender::Female;
+            } else {
+                gender = Gender::Unknown;
+            }
         }
 
         Student student(name, surname, day, month, year, address, zipcode, city, nationality, indexNumber, pesel, gender);

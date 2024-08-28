@@ -46,7 +46,7 @@ bool isNumber(const std::string& str) {
 int main() {
     StudentDataBase db;
     int choice;
-    std::string students_DataBase;
+    // std::string students_DataBase;
 
     do {
         displayMenu();
@@ -315,12 +315,12 @@ int main() {
             break;
         }
         case 10: {
-            db.saveToFile(students_DataBase);
+            db.saveToFile("students_DataBase.txt");
             break;
         }
         case 11: {
             std::cout << "Loading latest saved database" << std::endl;
-            db.loadFromFile(students_DataBase);
+            db.loadFromFile("students_DataBase.txt");
             break;
         }
         default: {
