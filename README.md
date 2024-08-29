@@ -1,4 +1,4 @@
-- STUDENT DATABASE MANAGEMENT SYSTEM -
+ -- STUDENT DATABASE MANAGEMENT SYSTEM --
 
 OVERVIEW
 This project is a simple Student Database Management System implemented in C++. The application allows users to manage a database of students, including adding new students, editing their information, displaying student details, searching by surname or PESEL(personal ID number in Polish system), sorting the database, and removing students. The data can also be saved to a text file and later loaded to the application for further manipulation. 
