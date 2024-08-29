@@ -28,9 +28,11 @@ Steps to Clone and Run
 
    for 'g++' use command:
    g++ -o student_database main.cpp dataBase.cpp student.cpp peselValidator.cpp
-   
+
    This will compile the source files into an executable named student_database.
-   ----------------------------------------------------------------------
+
+   -----------------------------------------------------------------------------
+
    for CMake use commands:
    cd ..
    mkdir build
@@ -39,7 +41,7 @@ Steps to Clone and Run
 
    This will compile the source files into an executable named student_database.
 
-4. Run the Program:
+5. Run the Program:
    after compiling, you can run the program using the following command:
    ./student_database
 
