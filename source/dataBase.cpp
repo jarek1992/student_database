@@ -319,6 +319,7 @@ void StudentDataBase::saveToFile(const std::string& students_DataBase) const {
     }
 
     std::cout << "Database saved to " << students_DataBase << std::endl;
+    std::cout << std::endl;
 }
 
 void StudentDataBase::loadFromFile(const std::string& students_DataBase) {
@@ -392,4 +393,5 @@ void StudentDataBase::loadFromFile(const std::string& students_DataBase) {
     }
 
     std::cout << "Database loaded from " << students_DataBase << std::endl;
+    std::cout << std::endl;
 }
