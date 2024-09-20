@@ -9,6 +9,7 @@ set(SRC
     source/peselValidator.cpp
     source/student.cpp
     source/person.cpp
+    source/employee.cpp
     )   
 
 add_library(${PROJECT_NAME}-lib STATIC ${SRC})
