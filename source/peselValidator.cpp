@@ -17,7 +17,7 @@ bool Validator::validatePeselNumber(const std::string& pesel, size_t day, size_t
     for (int i = 0; i < 10; i++) {
         sum += (pesel[i] - '0') * weights[i];
     }
-
+    
     int controlDigit = (10 - (sum % 10)) % 10;
 
     if (controlDigit != (pesel[10] - '0')) {
@@ -27,7 +27,6 @@ bool Validator::validatePeselNumber(const std::string& pesel, size_t day, size_t
     int peselYear = std::stoi(pesel.substr(0, 2));
     int peselMonth = std::stoi(pesel.substr(2, 2));
     int peselDay = std::stoi(pesel.substr(4, 2));
-
     // recognizing century and recalculating full year
     if (peselMonth >= 1 && peselMonth <= 12) {
         peselYear += 1900;
@@ -48,7 +47,6 @@ bool Validator::validatePeselNumber(const std::string& pesel, size_t day, size_t
         // incorrect month
         return false;
     }
-
     // checking matching with dates from pesel
     if (peselYear != year || peselMonth != month || peselDay != day) {
         std::cout << "Date of birth in PESEL not matching with your previous data!" << std::endl;
