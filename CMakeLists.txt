@@ -8,6 +8,7 @@ set(SRC
     source/dataBase.cpp
     source/peselValidator.cpp
     source/student.cpp
+    source/person.cpp
     )   
 
 add_library(${PROJECT_NAME}-lib STATIC ${SRC})
