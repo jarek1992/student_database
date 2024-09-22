@@ -491,7 +491,7 @@ void UniversityDataBase::loadFromFile(const std::string& university_DataBase) {
             }
         } else if (line == "----------------------------------") {
             if (isEmployee) {
-                auto employee = std::make_shared<Employee>(name, surname, address, zipcode, city, nationality, gender, salary, employeeJob);
+                auto employee = std::make_shared<Employee>(employeeJob, name, surname, address, zipcode, city, nationality, pesel, salary, gender);
                 personMap[pesel] = employee;
             } else {
                 auto student = std::make_shared<Student>(name, surname, day, month, year, address, zipcode, city, nationality, indexNumber, pesel, gender);

@@ -5,7 +5,7 @@
 #include <string>
 
 class Employee : public Person {
-protected:
+private:
   std::string employeeJob_;
   double salary_;
 
@@ -23,7 +23,7 @@ public:
   std::string getNationality() const override;
   std::string getPesel() const override;
   Gender getGender() const override;
-  double getSalary() const;
+  double getSalary();
   
   //setters
   void setEmployeeJob(const std::string& employeeJob);

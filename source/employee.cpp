@@ -34,7 +34,7 @@ std::string Employee::getPesel() const {
 Gender Employee::getGender() const {
   return Person::getGender();
 };
-double Employee::getSalary() const {
+double Employee::getSalary() {
   return salary_;
 }
 
