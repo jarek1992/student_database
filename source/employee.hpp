@@ -5,7 +5,7 @@
 #include <string>
 
 class Employee : public Person {
-private:
+protected:
   std::string employeeJob_;
   double salary_;
 
