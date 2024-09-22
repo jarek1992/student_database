@@ -10,10 +10,10 @@ Student::Student(const std::string& name, const std::string& surname, const size
 
 //getters
   std::string Student::getName() const {
-    return Person::getName();
+    return name_;
   }
   std::string Student::getSurname() const {
-    return Person::getSurname();
+    return surname_;
   }
   size_t Student::getDay() const {
     return day_;
@@ -25,33 +25,33 @@ Student::Student(const std::string& name, const std::string& surname, const size
     return year_;
   }
   std::string Student::getAddress() const {
-    return Person::getAddress();
+    return address_;
   }
   std::string Student::getZipCode() const {
-    return Person::getZipCode();
+    return zipcode_;
   }
   std::string Student::getCity() const {
-    return Person::getCity();
+    return city_;
   }
   std::string Student::getNationality() const {
-    return Person::getNationality();
+    return nationality_;
   }
   std::string Student::getIndexNumber() const {
     return indexNumber_;
   }
   std::string Student::getPesel() const {
-    return Person::getPesel();
+    return pesel_;
   }
   Gender Student::getGender() const {
-    return Person::getGender();
+    return gender_;
   }
 
 //setters
   void Student::setName(const std::string& name) {
-    Person::setName(name);
+    name_ = name;
   }
   void Student::setSurname(const std::string& surname) {
-    Person::setSurname(surname);
+    surname_ = surname;
   }
   void Student::setDay(const size_t day) {
     day_ = day;
@@ -63,24 +63,24 @@ Student::Student(const std::string& name, const std::string& surname, const size
     year_ = year;
   }
   void Student::setAddress(const std::string& address) {
-    Person::setAddress(address);
+    address_ = address;
   }
   void Student::setZipCode(const std::string& zipcode) {
-    Person::setZipCode(zipcode);
+    zipcode_ = zipcode;
   }
   void Student::setCity(const std::string& city) {
-    Person::setCity(city);
+    city_ = city;
   }
   void Student::setNationality(const std::string& nationality) {
-    Person::setNationality(nationality);
+    nationality_ = nationality;
   }
   void Student::setIndexNumber(const std::string& indexNumber) {
     indexNumber_ = indexNumber;
   }
   void Student::setPesel(const std::string& pesel) {
-    Person::setPesel(pesel);
+    pesel_ = pesel;
   }
   void Student::setGender(Gender gender) {
-    Person::setGender(gender);
+    gender_ = gender;
   }
 

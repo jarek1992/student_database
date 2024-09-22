@@ -8,7 +8,7 @@ enum class Gender {
 };
 
 class Person {
-private:
+protected:
   std::string name_;
   std::string surname_;
   std::string address_;

@@ -11,28 +11,28 @@ std::string Employee::getEmployeeJob() const {
   return employeeJob_;
 }
 std::string Employee::getName() const {
-  return Person::getName();
+  return name_;
 }
 std::string Employee::getSurname() const {
-  return Person::getSurname();
+  return surname_;
 }
 std::string Employee::getAddress() const {
-  return Person::getAddress();
+  return address_;
 }
 std::string Employee::getZipCode() const {
-  return Person::getZipCode();
+  return zipcode_;
 }
 std::string Employee::getCity() const {
-  return Person::getCity();
+  return city_;
 }
 std::string Employee::getNationality() const {
-  return Person::getNationality();
+  return nationality_;
 }
 std::string Employee::getPesel() const {
-  return Person::getPesel();
+  return pesel_;
 }
 Gender Employee::getGender() const {
-  return Person::getGender();
+  return gender_;
 };
 double Employee::getSalary() {
   return salary_;
@@ -43,28 +43,28 @@ void Employee::setEmployeeJob(const std::string &employeeJob) {
   employeeJob_ = employeeJob;
 }
 void Employee::setName(const std::string& name) {
-  Person::setName(name);
+  name_ = name;
 }
 void Employee::setSurname(const std::string& surname) {
-  Person::setSurname(surname);
+  surname_ = surname;
 }
 void Employee::setAddress(const std::string& address) {
-   Person::setAddress(address);
+   address_ = address;
 }
 void Employee::setZipCode(const std::string& zipcode) {
-  Person::setZipCode(zipcode);
+  zipcode_ = zipcode;
 }
 void Employee::setCity(const std::string& city) {
-  Person::setCity(city);
+  city_ = city;
 }
 void Employee::setNationality(const std::string& nationality) {
-  Person::setNationality(nationality);
+  nationality_ = nationality;
 }
 void Employee::setPesel(const std::string& pesel) {
-  Person::setPesel(pesel);
+  pesel_ = pesel;
 }
 void Employee::setGender(Gender gender) {
-  Person::setGender(gender);
+  gender_ = gender;
 }
 void Employee::setSalary(double salary) { 
   if (salary >= 0) {
