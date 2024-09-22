@@ -34,12 +34,12 @@ public:
   virtual Gender getGender() const = 0;
 
 //setters
-  virtual void setName(const std::string& name);
-  virtual void setSurname(const std::string& surname);
-  virtual void setAddress(const std::string& address);
-  virtual void setZipCode(const std::string& zipcode);
-  virtual void setCity(const std::string& city);
-  virtual void setNationality(const std::string& nationality);
-  virtual void setPesel(const std::string& pesel);
-  virtual void setGender(Gender gender);  
+  virtual void setName(const std::string& name) = 0;
+  virtual void setSurname(const std::string& surname) = 0;
+  virtual void setAddress(const std::string& address) = 0;
+  virtual void setZipCode(const std::string& zipcode) = 0;
+  virtual void setCity(const std::string& city) = 0;
+  virtual void setNationality(const std::string& nationality) = 0;
+  virtual void setPesel(const std::string& pesel) = 0;
+  virtual void setGender(Gender gender) = 0;  
 };
