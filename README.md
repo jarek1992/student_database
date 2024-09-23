@@ -4,7 +4,7 @@ OVERVIEW
 This project is a simple University Database Management System implemented in C++. The application allows users to manage a database of students and employees, including adding new students or employees, editing their information, displaying details, searching by surname or PESEL(personal ID number in Polish system), sorting the database, and removing. The data can also be saved to a text file and later loaded to the application for further manipulation. 
 
 FEATURES
-- add Student: Add new students to the database by providing details such as name, surname, date of birth, address, PESEL number, and gender.
+- add Student: Add new students to the database by providing details such as name, surname, date of birth, address, PESEL number(which will be verified by validator according to polish personal number system), and gender.
 - edit Student: Edit student information by searching with their index number.
 - display Student: Display a student's details by searching with their index number.
 - add Employee: Add new employees to the database by providing details such as employeeJob, name, surname, address, PESEL number, salary , and gender.

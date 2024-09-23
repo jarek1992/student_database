@@ -43,7 +43,6 @@ std::string toLowerCase(const std::string& str) {
     return result;
 }
 
-
 void UniversityDataBase::addStudent(const std::shared_ptr<Student>& student) {
     personMap[student->getPesel()] = student;
 }
@@ -528,4 +527,15 @@ void UniversityDataBase::loadFromFile(const std::string& university_DataBase) {
     }
     std::cout << "Database loaded from: " << university_DataBase << std::endl;
     std::cout << std::endl;
+}
+
+std::string UniversityDataBase::generateUniqueKey() {
+    static int uniqueIdCounter = 0;
+    std::string uniqueKey;
+    //loop until found a truly unique key
+    do {
+        uniqueKey = "ID" + std::to_string(uniqueIdCounter);
+        uniqueIdCounter++;
+    } while (personMap.find(uniqueKey) != personMap.end());
+    return uniqueKey;
 }
