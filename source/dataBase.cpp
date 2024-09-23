@@ -43,6 +43,7 @@ std::string toLowerCase(const std::string& str) {
     return result;
 }
 
+
 void UniversityDataBase::addStudent(const std::shared_ptr<Student>& student) {
     personMap[student->getPesel()] = student;
 }
@@ -177,9 +178,6 @@ void UniversityDataBase::editStudentByIndexNumber(const std::string& indexNumber
 void UniversityDataBase::displayPersonByIndex(const std::string& pesel) const {
     auto it = personMap.find(pesel);
     if (it != personMap.end()) {
-        auto student = std::dynamic_pointer_cast<Student>(it->second);
-        auto employee = std::dynamic_pointer_cast<Employee>(it->second);
-
         //common datas for students and employees
         std::cout << "Name: " << it->second->getName() << std::endl;
         std::cout << "Surname: " << it->second->getSurname() << std::endl;
@@ -207,12 +205,12 @@ void UniversityDataBase::displayPersonByIndex(const std::string& pesel) const {
         }
         std::cout << std::endl; 
         //specific only for students and employess
-         if (student) {
+         if (auto student = std::dynamic_pointer_cast<Student>(it->second)) {
              std::cout << "Birth date: " << student->getDay() << "-" << student->getMonth() << "-" << student->getYear() << std::endl;
              std::cout << "Index Number: " << student->getIndexNumber() << std::endl;  
-         } else if (employee) {
+         } else if (auto employee = std::dynamic_pointer_cast<Employee>(it->second)) {
              std::cout << "Employee Position: " << employee->getEmployeeJob() << std::endl;
-             std::cout << "Salary: " << employee->getSalary() << std::endl;
+             std::cout << "Salary: " << employee->getSalary() << "€" << std::endl;
          }
             std::cout << std::endl;
         } else {
@@ -281,9 +279,23 @@ void UniversityDataBase::editEmployeeBySurname(const std::string& surname) {
 }
 
 void UniversityDataBase::displayAllPersons() const {
+    //display students list
+    std::cout << "STUDENTS LIST: " << std::endl;
     for (const auto& pair : personMap) {
-        displayPersonByIndex(pair.first);
-        std::cout << "----------------------------------" << std::endl;
+        if (std::dynamic_pointer_cast<Student>(pair.second)) {
+            //display only student
+            displayPersonByIndex(pair.first);
+            std::cout << "----------------------------------" << std::endl;
+        }
+    }
+    //display employees list
+    std::cout << "EMPLOYEES LIST: " << std::endl;
+    for (const auto& pair : personMap) {
+        if (std::dynamic_pointer_cast<Employee>(pair.second)) {
+            //display only employees
+            displayPersonByIndex(pair.first);
+            std::cout << "----------------------------------" << std::endl;
+        }
     }
 }
 

@@ -49,7 +49,6 @@ bool isNumber(const std::string& str) {
 int main() {
     UniversityDataBase db;
     int choice;
-    // std::string students_DataBase;
 
     do {
         displayMenu();
@@ -176,6 +175,8 @@ int main() {
             while (true) {
                 std::getline(std::cin, pesel);
                 if (pesel.empty()) {
+                    std::string uniqueKey = db.generateUniqueKey();
+                    pesel = uniqueKey;
                     break;
                 }
                 if (Validator::validatePeselNumber(pesel, day, month, year)) {
@@ -270,6 +271,10 @@ int main() {
             //get employee PESEL
             std::cout << "enter employee's PESEL: ";
             std::getline(std::cin, pesel);
+            if (pesel.empty()) {
+                std::string uniqueKey = db.generateUniqueKey(); 
+                pesel = uniqueKey;
+            }
             
             //get employee salary
             std::cout << "enter employee's salary: ";
@@ -280,7 +285,7 @@ int main() {
             }
             std::cin.ignore();
             
-            //get student gender 
+            //get employee gender 
             std::cout << "enter a gender(Male/Female): ";
             std::getline(std::cin, genderC);
             if (genderC == "Male" || genderC == "male") {
@@ -318,7 +323,7 @@ int main() {
         //display database
         case 6: {
             std::cout << std::endl;
-            std::cout << "=========== DATABASE ===========" << std::endl;
+            std::cout << "=========== UNIVERSITY DATABASE ===========" << std::endl;
             db.displayAllPersons();
             std::cout << std::endl;
             break;

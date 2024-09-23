@@ -4,14 +4,14 @@
 #include "student.hpp"
 #include "employee.hpp"
 #include "person.hpp"
-#include <map>
+#include <unordered_map>
 #include <memory>
 #include <string>
 #include <vector>
 
 class UniversityDataBase {
 private:
-    std::map<std::string, std::shared_ptr<Person>> personMap;
+    std::unordered_map<std::string, std::shared_ptr<Person>> personMap;
 
 public:
     void addStudent(const std::shared_ptr<Student>& student);
@@ -28,4 +28,6 @@ public:
     void sortAndDisplayBySurname() const;
     void saveToFile(const std::string& university_DataBase) const;
     void loadFromFile(const std::string& university_DataBase);
+    std::string generateUniqueKey();
+
 };
