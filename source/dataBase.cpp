@@ -280,6 +280,7 @@ void UniversityDataBase::editEmployeeBySurname(const std::string& surname) {
 void UniversityDataBase::displayAllPersons() const {
     //display students list
     std::cout << "STUDENTS LIST: " << std::endl;
+    std::cout << std::endl;
     for (const auto& pair : personMap) {
         if (std::dynamic_pointer_cast<Student>(pair.second)) {
             //display only student
@@ -289,6 +290,7 @@ void UniversityDataBase::displayAllPersons() const {
     }
     //display employees list
     std::cout << "EMPLOYEES LIST: " << std::endl;
+    std::cout << std::endl;
     for (const auto& pair : personMap) {
         if (std::dynamic_pointer_cast<Employee>(pair.second)) {
             //display only employees

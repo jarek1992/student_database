@@ -177,7 +177,7 @@ int main() {
                 if (pesel.empty()) {
                     std::string uniqueKey = db.generateUniqueKey();
                     pesel = uniqueKey;
-                    std::cout << "generating temporary PESEL no..." << std::endl;
+                    std::cout << " generating temporary PESEL no..." << std::endl;
                     break;
                 }
                 if (Validator::validatePeselNumber(pesel, day, month, year)) {
@@ -275,7 +275,7 @@ int main() {
             if (pesel.empty()) {
                 std::string uniqueKey = db.generateUniqueKey(); 
                 pesel = uniqueKey;
-                std::cout << "generating temporary PESEL no..." << std::endl;
+                std::cout << " generating temporary PESEL no..." << std::endl;
             }
             
             //get employee salary
