@@ -341,10 +341,7 @@ int main() {
                 std::cout << "enter the surname: ";
                 std::getline(std::cin, surname);
 
-                std::string lowerSurname = surname;
-                std::transform(lowerSurname.begin(), lowerSurname.end(), lowerSurname.begin(), ::tolower);
-
-                results = db.findPersonBySurname(lowerSurname);
+                results = db.findPersonBySurname(surname);
                 std::cout << std::endl;
 
                 if (results.empty()) {
@@ -355,7 +352,6 @@ int main() {
                     if (tryAgain != 'Y' && tryAgain != 'y') {
                         std::cout << "Exit searching " << std::endl;
                         break;
-                        std::cout << std::endl;
                     }
                 } else {
                     std::cout << "=========== PERSON " << surname << " ===========" << std::endl;
@@ -365,7 +361,11 @@ int main() {
                             db.displayPersonByIndex(student->getPesel());
                             std::cout << std::endl;
                         } else {
-                            std::cout << "Found an employee with the same surname, skipping..." << std::endl;
+                            auto employee = std::dynamic_pointer_cast<Employee>(person);
+                            if (employee) {
+                                db.displayPersonByIndex(employee->getPesel());
+                                std::cout << std::endl;                  
+                            }
                         }
                     }
                     found = true;
@@ -454,7 +454,7 @@ int main() {
             std::cout << " exiting the program..." << std::endl;
             break;
         }
-
+        //if invalid option no.
         default: {
             std::cout << "invalid option. Type again." << std::endl;
             std::cout << std::endl;

@@ -29,5 +29,4 @@ public:
     void saveToFile(const std::string& university_DataBase) const;
     void loadFromFile(const std::string& university_DataBase);
     std::string generateUniqueKey();
-
 };

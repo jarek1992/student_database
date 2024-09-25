@@ -78,7 +78,7 @@ void UniversityDataBase::editStudentByIndexNumber(const std::string& indexNumber
             if (!newDay.empty() && isValidDay(newDay)) {
                 day = std::stoul(newDay);
             } else {
-                std::cout << "invalid day" << std::endl;
+                std::cout << " skipping/invalid day" << std::endl;
             }
             std::cout << "enter new month of birth(or press enter to keep current): ";
             std::string newMonth;
@@ -86,7 +86,7 @@ void UniversityDataBase::editStudentByIndexNumber(const std::string& indexNumber
             if (!newMonth.empty() && isValidMonth(newMonth)) {
                 month = std::stoul(newMonth);
             } else {
-                std::cout << "invalid month" << std::endl;
+                std::cout << " skipping/invalid month" << std::endl;
             }
             std::cout << "enter new year of birth(or press enter to keep current): ";
             std::string newYear;
@@ -94,7 +94,7 @@ void UniversityDataBase::editStudentByIndexNumber(const std::string& indexNumber
             if (!newYear.empty() && isValidYear(newYear)) {
                 year = std::stoul(newYear);
             } else {
-                std::cout << "invalid year" << std::endl;
+                std::cout << " skipping/invalid year" << std::endl;
             }
             std::cout << "enter new address(or press enter to keep current): ";
             std::getline(std::cin, address);
@@ -240,7 +240,7 @@ void UniversityDataBase::editEmployeeBySurname(const std::string& surname) {
             double percentage;
 
             //promote employee
-            std::cout << "enter new employee position(or press enter to keep current):";
+            std::cout << "enter new employee position(or press enter to keep current): ";
             std::getline(std::cin, newPosition);
             if (!newPosition.empty()) {
                 employee->promote(newPosition);
@@ -273,7 +273,7 @@ void UniversityDataBase::editEmployeeBySurname(const std::string& surname) {
             
             //edit further if other employee with the same surname
             char choice;
-            std::cout << "Do you want to edit another employee with the same surname? (Y/N): ";
+            std::cout << "Do you want to edit another employee with the same surname if exists in database? (Y/N): ";
             std::cin >> choice;
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             if (choice == 'N' || choice == 'n') {
@@ -311,14 +311,17 @@ void UniversityDataBase::displayAllPersons() const {
 
 std::vector<std::shared_ptr<Person>> UniversityDataBase::findPersonBySurname(const std::string& surname) const {
     std::vector<std::shared_ptr<Person>> result;
+
     std::string lowerSurname = surname;
     std::transform(lowerSurname.begin(), lowerSurname.end(), lowerSurname.begin(), ::tolower);
 
     for (const auto& pair : personMap) {
-        std::string lowerPairSurname = pair.second->getSurname();
-        std::transform(lowerPairSurname.begin(), lowerPairSurname.end(), lowerPairSurname.begin(), ::tolower);
+        std::string personSurname = pair.second->getSurname();
+        //transform only once per comparison
+        std::string lowerPersonSurname = personSurname;
+        std::transform(lowerPersonSurname.begin(), lowerPersonSurname.end(), lowerPersonSurname.begin(), ::tolower);
 
-        if (lowerPairSurname == lowerSurname) {
+        if (lowerPersonSurname == lowerSurname) {
             result.push_back(pair.second);
         }
     }
