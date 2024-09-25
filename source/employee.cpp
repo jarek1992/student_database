@@ -75,13 +75,12 @@ void Employee::setSalary(double salary) {
 }
 void Employee::promote(const std::string& newPosition) {
   employeeJob_ = newPosition;
-  std::cout << getName() << " " << getSurname() << " has been promoted from " << getEmployeeJob() << " to " << employeeJob_ << std::endl;
+  // std::cout << getName() << " " << getSurname() << " has been promoted from " << getEmployeeJob() << " to " << employeeJob_ << std::endl;
 }
 void Employee::giveRaise(double percentage) {
   if(percentage > 0) {
     salary_ +=salary_ * (percentage / 100);
     std::cout << getName() << " " << getSurname() << " received a " << percentage << " % raise." << std::endl;
-    std::cout << "New salary: " << salary_ << std::endl;
   } if (percentage == 0) {
     std::cout << "no raise to " << getName() << " " << getSurname() << "." << std::endl;
   } else {

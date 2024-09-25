@@ -53,7 +53,8 @@ int main() {
     do {
         displayMenu();
         std::cin >> choice;
-        std::cin.ignore();
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (choice) {
         //add a student
@@ -210,6 +211,7 @@ int main() {
             std::string indexNumber;
             std::cout << "enter index number(e.g.111111Fg): ";
             std::getline(std::cin, indexNumber);
+            
             if (!isValidIndexNumber(indexNumber)) {
                 std::cout << "invalid index number" << std::endl;
                 std::cout << std::endl;
@@ -317,7 +319,6 @@ int main() {
                 std::cout << "Surname cannot be empty." << std::endl;
                 break;
             }
-            
             db.editEmployeeBySurname(surname);
             std::cout << "Employee with surname '" << surname << "' edited successfully!" << std::endl;
             break;
@@ -448,6 +449,12 @@ int main() {
             db.loadFromFile("university_DataBase.txt");
             break;
         }
+        //exit
+        case 0 : {
+            std::cout << " exiting the program..." << std::endl;
+            break;
+        }
+
         default: {
             std::cout << "invalid option. Type again." << std::endl;
             std::cout << std::endl;
