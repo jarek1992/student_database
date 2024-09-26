@@ -328,11 +328,13 @@ std::vector<std::shared_ptr<Person>> UniversityDataBase::findPersonBySurname(con
 }
 
 std::shared_ptr<Person> UniversityDataBase::findPersonByPesel(const std::string& pesel) const {
-    auto it = personMap.find(pesel);
-    if(it != personMap.end()) {
-        return it->second;
+    //iterating over all elements in personMap
+    for (const auto& pair : personMap) {
+        if (pair.second->getPesel() == pesel) {
+            return pair.second;
+        }
     }
-    return nullptr;
+    return nullptr; 
 }
 
 void UniversityDataBase::removeStudentByIndexNumber(const std::string& indexNumber) {

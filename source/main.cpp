@@ -287,6 +287,7 @@ int main() {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             }
+                
             std::cin.ignore();
             
             //get employee gender 
@@ -376,7 +377,7 @@ int main() {
         //search by PESEL
         case 8: {
             std::string pesel;
-            std::cout << "enter a PESEL: ";
+            std::cout << "enter the PESEL: ";
             std::getline(std::cin, pesel);
             
             std::shared_ptr<Person> foundPerson = db.findPersonByPesel(pesel);
@@ -390,14 +391,14 @@ int main() {
                 //check if foundPerson is a student
                 auto student = std::dynamic_pointer_cast<Student>(foundPerson);
                 if (student) {
-                    std::cout << "=========== STUDENT PESEL:" << pesel << " ===========" << std::endl;
-                    db.displayPersonByIndex(student->getPesel());
+                    std::cout << "=========== STUDENT PESEL: " << pesel << " ===========" << std::endl;
+                    db.displayPersonByIndex(student->getIndexNumber());
                 } else {
                     //if foundPerson is an employee
                     auto employee = std::dynamic_pointer_cast<Employee>(foundPerson);
                     if (employee) {
-                        std::cout << "=========== EMPLOYEE PESEL:" << pesel << " ===========" << std::endl;
-                        db.displayPersonByIndex(student->getPesel());
+                        std::cout << "=========== EMPLOYEE PESEL: " << pesel << " ===========" << std::endl;
+                        db.displayPersonByIndex(employee->getPesel());
                     } else {
                         std::cout << "Person with PESEL: " << pesel << " is neither a student nor an employee." << std::endl;
                     } 

@@ -75,7 +75,6 @@ void Employee::setSalary(double salary) {
 }
 void Employee::promote(const std::string& newPosition) {
   employeeJob_ = newPosition;
-  // std::cout << getName() << " " << getSurname() << " has been promoted from " << getEmployeeJob() << " to " << employeeJob_ << std::endl;
 }
 void Employee::giveRaise(double percentage) {
   if(percentage > 0) {
