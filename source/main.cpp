@@ -195,7 +195,7 @@ int main() {
             } else if (genderC == "Female" || genderC == "female") {
                 gender = Gender::Female;
             } else {
-                std::cout << "unknown gender input" << std::endl;
+                std::cout << " unknown gender input" << std::endl;
                 gender = Gender::Unknown;
             }
             //add student to database
@@ -358,7 +358,7 @@ int main() {
                     for (const auto& person : results) {
                         auto student = std::dynamic_pointer_cast<Student>(person);
                         if (student) {
-                            db.displayPersonByIndex(student->getPesel());
+                            db.displayPersonByIndex(student->getIndexNumber());
                             std::cout << std::endl;
                         } else {
                             auto employee = std::dynamic_pointer_cast<Employee>(person);

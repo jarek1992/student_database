@@ -311,7 +311,6 @@ void UniversityDataBase::displayAllPersons() const {
 
 std::vector<std::shared_ptr<Person>> UniversityDataBase::findPersonBySurname(const std::string& surname) const {
     std::vector<std::shared_ptr<Person>> result;
-
     std::string lowerSurname = surname;
     std::transform(lowerSurname.begin(), lowerSurname.end(), lowerSurname.begin(), ::tolower);
 
