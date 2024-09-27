@@ -77,10 +77,10 @@ void Employee::promote(const std::string& newPosition) {
   employeeJob_ = newPosition;
 }
 void Employee::giveRaise(double percentage) {
-  if(percentage > 0) {
+  if (percentage > 0 && percentage <= 100) {
     salary_ +=salary_ * (percentage / 100);
     std::cout << getName() << " " << getSurname() << " received a " << percentage << " % raise." << std::endl;
-  } if (percentage == 0) {
+  } else if (percentage == 0) {
     std::cout << "no raise to " << getName() << " " << getSurname() << "." << std::endl;
   } else {
     std::cout << "invalid percentage number for raise" << std::endl; 

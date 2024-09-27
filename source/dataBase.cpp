@@ -225,60 +225,71 @@ void UniversityDataBase::addEmployee(const std::shared_ptr<Employee>& employee) 
 
 void UniversityDataBase::editEmployeeBySurname(const std::string& surname) {
     bool found = false;
+    // convert the input surname to lowercase for case-insensitive comparision
+    std::string lowerSurname = surname;
+    std::transform(lowerSurname.begin(), lowerSurname.end(), lowerSurname.begin(), ::tolower);
 
     for (const auto& pair : personMap) {
         auto employee = std::dynamic_pointer_cast<Employee>(pair.second);
-        if (employee && employee->getSurname() == surname) {
-            found = true;
+        if (employee) {
+            std::string employeeSurname = employee->getSurname();
+            std::transform(employeeSurname.begin(), employeeSurname.end(), employeeSurname.begin(), ::tolower);
 
-            std::cout << "Editing details for Employee: " << employee->getName() << " " << employee->getSurname() << std::endl;
-           
-            std::string newPosition;
-            std::string newAddress;
-            std::string newZipCode;
-            std::string newCity;
-            double percentage;
+            if (employeeSurname == lowerSurname) {
+                found = true;
 
-            //promote employee
-            std::cout << "enter new employee position(or press enter to keep current): ";
-            std::getline(std::cin, newPosition);
-            if (!newPosition.empty()) {
-                employee->promote(newPosition);
-            }
-            //get new details for employee from user 
-            std::cout << "enter new address(or press enter to keep current): ";
-            std::getline(std::cin, newAddress);
-            if (!newAddress.empty()) {
-                employee->setAddress(newAddress);
-            }
-            std::cout << "enter new zip code(or press enter to keep current): ";
-            std::getline(std::cin, newZipCode);
-            if (!newZipCode.empty()) {
-                employee->setZipCode(newZipCode);
-            }
-            std::cout << "enter new city(or press enter to keep current): ";
-            std::getline(std::cin, newCity);
-            if (!newCity.empty()) {
-                employee->setCity(newCity);
-            }
-            std::cout << "enter salary raise 0-100% (or press enter to keep current): ";
-            std::cin >> percentage;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-            if (percentage >= 0) {
-                employee->giveRaise(percentage);
-            } else if (percentage < 0) {
-                std::cout << "Invalid salary input. Salary not updated" << std::endl;
-            }
-            std::cout << "Employee details updated successfully!" << std::endl;
-            
-            //edit further if other employee with the same surname
-            char choice;
-            std::cout << "Do you want to edit another employee with the same surname if exists in database? (Y/N): ";
-            std::cin >> choice;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            if (choice == 'N' || choice == 'n') {
-                break;
-            }
+                std::cout << std::endl;
+                std::cout << "=========== EMPLOYEE: " << surname << " ===========" << std::endl;
+                displayPersonByIndex(employee->getPesel());
+                std::cout << "----------------------------------" << std::endl;
+
+                std::string newPosition;
+                std::string newAddress;
+                std::string newZipCode;
+                std::string newCity;
+                double percentage;
+
+                //promote employee
+                std::cout << "enter new employee position(or press enter to keep current): ";
+                std::getline(std::cin, newPosition);
+                if (!newPosition.empty()) {
+                    employee->promote(newPosition);
+                }
+                //get new details for employee from user 
+                std::cout << "enter new address(or press enter to keep current): ";
+                std::getline(std::cin, newAddress);
+                if (!newAddress.empty()) {
+                    employee->setAddress(newAddress);
+                }
+                std::cout << "enter new zip code(or press enter to keep current): ";
+                std::getline(std::cin, newZipCode);
+                if (!newZipCode.empty()) {
+                    employee->setZipCode(newZipCode);
+                }
+                std::cout << "enter new city(or press enter to keep current): ";
+                std::getline(std::cin, newCity);
+                if (!newCity.empty()) {
+                    employee->setCity(newCity);
+                }
+                std::cout << "enter salary raise 0-100%: ";
+                std::cin >> percentage;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
+                if (percentage >= 0) {
+                    employee->giveRaise(percentage);
+                } else if (percentage < 0 && percentage > 100.0) {
+                    std::cout << "Invalid salary input. Salary not updated" << std::endl;
+                }
+                std::cout << "Employee " << surname << " details updated successfully!" << std::endl;
+                
+                //edit further if other employee with the same surname
+                char choice;
+                std::cout << "Do you want to edit another employee with the same surname if exists in database? (Y/N): ";
+                std::cin >> choice;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                if (choice == 'N' || choice == 'n') {
+                    break;
+                }
+            }            
         }
     } 
     if(!found) {

@@ -277,7 +277,7 @@ int main() {
             if (pesel.empty()) {
                 std::string uniqueKey = db.generateUniqueKey(); 
                 pesel = uniqueKey;
-                std::cout << " generating temporary PESEL no..." << std::endl;
+                std::cout << " generating temporary PESEL number..." << std::endl;
             }
             
             //get employee salary
@@ -317,11 +317,11 @@ int main() {
             std::getline(std::cin, surname);
 
             if (surname.empty()) {
-                std::cout << "Surname cannot be empty." << std::endl;
+                std::cout << "Surname input empty" << std::endl;
                 break;
             }
             db.editEmployeeBySurname(surname);
-            std::cout << "Employee with surname '" << surname << "' edited successfully!" << std::endl;
+            std::cout << std::endl;
             break;
         }
         //display database
