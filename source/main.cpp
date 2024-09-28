@@ -162,13 +162,7 @@ int main() {
                     std::cin.clear();
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 }
-                std::cout << "Invalid index number. Required 6 digits and and two letters. Try again?(Y/N): ";
-                char tryAgain;
-                std::cin >> tryAgain;
-                if (tryAgain != 'y' && tryAgain != 'Y') {
-                    break;
-                }
-                std::cout << "enter index number(e.g.111111Fg): ";
+                std::cout << "Invalid index number. Enter index number(e.g.111111Fg): ";
             }
             //get student PESEL
             std::cout << "enter student's PESEL: ";
@@ -178,7 +172,7 @@ int main() {
                 if (pesel.empty()) {
                     std::string uniqueKey = db.generateUniqueKey();
                     pesel = uniqueKey;
-                    std::cout << " generating temporary PESEL no..." << std::endl;
+                    std::cout << " generating temporary PESEL number..." << std::endl;
                     break;
                 }
                 if (Validator::validatePeselNumber(pesel, day, month, year)) {
@@ -358,12 +352,14 @@ int main() {
                     std::cout << "=========== PERSON " << surname << " ===========" << std::endl;
                     for (const auto& person : results) {
                         auto student = std::dynamic_pointer_cast<Student>(person);
-                        if (student) {
+                        if (student) { 
+                            std::cout << "Status: student" << std::endl;
                             db.displayPersonByIndex(student->getIndexNumber());
                             std::cout << std::endl;
                         } else {
                             auto employee = std::dynamic_pointer_cast<Employee>(person);
                             if (employee) {
+                                std::cout << "Status: employee" << std::endl;
                                 db.displayPersonByIndex(employee->getPesel());
                                 std::cout << std::endl;                  
                             }
@@ -397,10 +393,10 @@ int main() {
                     //if foundPerson is an employee
                     auto employee = std::dynamic_pointer_cast<Employee>(foundPerson);
                     if (employee) {
-                        std::cout << "=========== EMPLOYEE PESEL: " << pesel << " ===========" << std::endl;
+                        std::cout << "=========== EMPLOYEE PESEL/ID: " << pesel << " ===========" << std::endl;
                         db.displayPersonByIndex(employee->getPesel());
                     } else {
-                        std::cout << "Person with PESEL: " << pesel << " is neither a student nor an employee." << std::endl;
+                        std::cout << "Person with PESEL " << pesel << " is neither a student nor an employee." << std::endl;
                     } 
                 }
                 std::cout << std::endl;
@@ -428,14 +424,14 @@ int main() {
         //sort by PESEL
         case 11: {
             db.sortAndDisplayByPesel();
-            std::cout << "students sorted by pesel's number" << std::endl;
+            std::cout << "sorted by PESEL/ID number" << std::endl;
             std::cout << std::endl;
             break;
         }
         //sort by surname
         case 12: {
             db.sortAndDisplayBySurname();
-            std::cout << "students sorted by surnames" << std::endl;
+            std::cout << "sorted by surnames" << std::endl;
             std::cout << std::endl;
             break;
         }

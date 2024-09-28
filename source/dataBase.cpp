@@ -42,6 +42,9 @@ std::string toLowerCase(const std::string& str) {
     std::transform(result.begin(), result.end(), result.begin(), ::tolower);
     return result;
 }
+bool isNumeric(const std::string& str) {
+    return std::all_of(str.begin(), str.end(), ::isdigit);
+}
 
 void UniversityDataBase::addStudent(const std::shared_ptr<Student>& student) {
     personMap[student->getIndexNumber()] = student;
@@ -216,6 +219,7 @@ void UniversityDataBase::displayPersonByIndex(const std::string& pesel) const {
             std::cout << std::endl;
         } else {
             std::cout << "person not found in database";
+            std::cout << std::endl;
         }
     }
 
@@ -354,10 +358,14 @@ void UniversityDataBase::removeStudentByIndexNumber(const std::string& indexNumb
            auto student = std::dynamic_pointer_cast<Student>(pair.second);
             return student && student->getIndexNumber() == indexNumber;
         });
-    
+
     if (it != personMap.end()) {
+        //capture student details before removal
+        auto student = std::dynamic_pointer_cast<Student>(it->second);
+        //remove the student from the map
         personMap.erase(it);
         std::cout << "student with index number " << indexNumber << " removed" << std::endl;
+        std::cout << "name: " << student->getName() << " surname: " << student->getSurname() << std::endl;
     } else {
         std::cout << "student with index number " << indexNumber << " not found" << std::endl;
     }
@@ -370,6 +378,7 @@ void UniversityDataBase::removeEmployeeByPesel(const std::string& pesel) {
         if (employee) {
             personMap.erase(it);
             std::cout << "Employee with PESEL " << pesel << " removed" << std::endl;
+            std::cout << "name: " << employee->getName() << " surname: " << employee->getSurname() << std::endl;
         } else {
             std::cout << "Employee with PESEL "  << pesel << " is not an employee" << std::endl;
         }
@@ -380,11 +389,24 @@ void UniversityDataBase::removeEmployeeByPesel(const std::string& pesel) {
 
 void UniversityDataBase::sortAndDisplayByPesel() const {
     std::vector<std::pair<std::string, std::shared_ptr<Person>>> personVector(personMap.begin(), personMap.end());
-    //sort the vector by PESEL
+    //sort the vector by PESEL. Non numeric like ID0 will be considered "less than" numeric
     std::sort(personVector.begin(), personVector.end(), [](const auto& a, const auto& b) {
-        return std::stoll(a.second->getPesel()) < std::stoll(b.second->getPesel());
-    });
-    
+        std::string peselA = a.second->getPesel();
+        std::string peselB = b.second->getPesel();
+
+        bool isPeselANumeric = isNumeric(peselA);
+        bool isPeselBNumeric = isNumeric(peselB);
+        //comparison for numeric PESELs
+        if (isPeselANumeric && isPeselBNumeric) {
+            return std::stoll(peselA) < std::stoll(peselB);
+        //comparison for non-numeric PESELs
+        } else if (!isPeselANumeric && !isPeselBNumeric) {
+            return peselA < peselB;
+        //non-numeric PESELs go before numeric ones
+        } else {
+            return isPeselANumeric;
+        }  
+    }); 
     std::cout << std::endl;
     std::cout << "=========== Sorted by PESEL ===========" << std::endl;
     
@@ -423,40 +445,39 @@ void UniversityDataBase::saveToFile(const std::string& university_DataBase) cons
         std::shared_ptr<Employee> employee = std::dynamic_pointer_cast<Employee>(pair.second);
 
         if (student) {
-            dataBase << "Type: Student\n"
-                     << "Name: " << student->getName() << "\n"
+            dataBase << "Student\n";
+            dataBase << "Name: " << student->getName() << "\n"
                      << "Surname: " << student->getSurname() << "\n"
-                     << "Birth date: " << student->getDay() << "-" << student->getMonth() << "-" << student->getYear() << "\n"
                      << "Address: " << student->getAddress() << "\n"
                      << "ZipCode: " << student->getZipCode() << "\n"
                      << "City: " << student->getCity() << "\n"
                      << "Nationality: " << student->getNationality() << "\n"
-                     << "Index Number: " << student->getIndexNumber() << "\n"
                      << "Pesel: " << student->getPesel() << "\n"
                      << "Gender: " << (student->getGender() == Gender::Male ? "Male" : student->getGender() == Gender::Female ? "Female" : "Unknown") << "\n"
+                     << "Birth date: " << student->getDay() << "-" << student->getMonth() << "-" << student->getYear() << "\n"
+                     << "Index Number: " << student->getIndexNumber() << "\n"
                      << "----------------------------------" << "\n";
         } else if (employee) {
-            dataBase << "Type: Employee\n"
-                     << "Employee Position: " << employee->getEmployeeJob() << "\n"
-                     << "Name: " << employee->getName() << "\n"
+            dataBase << "Employee\n";
+            dataBase << "Name: " << employee->getName() << "\n"
                      << "Surname: " << employee->getSurname() << "\n"
                      << "Address: " << employee->getAddress() << "\n"
                      << "ZipCode: " << employee->getZipCode() << "\n"
                      << "City: " << employee->getCity() << "\n"
                      << "Nationality: " << employee->getNationality() << "\n"
                      << "Pesel: " << employee->getPesel() << "\n"
-                     << "Salary: " << employee->getSalary() << "\n"
                      << "Gender: " << (employee->getGender() == Gender::Male ? "Male" : employee->getGender() == Gender::Female ? "Female" : "Unknown") << "\n"
+                     << "Employee Position: " << employee->getEmployeeJob() << "\n"
+                     << "Salary: " << employee->getSalary() << "\n"
                      << "----------------------------------" << "\n";
         }
     }
-
     std::cout << "Database saved to " << university_DataBase << std::endl;
     std::cout << std::endl;
 }
 
 void UniversityDataBase::loadFromFile(const std::string& university_DataBase) {
-    std::fstream dataBase("university_DataBase.txt", std::ios::in);
+    std::fstream dataBase(university_DataBase, std::ios::in);
 
     if (!dataBase.is_open()) {
         throw std::runtime_error("could not open file to load");
@@ -464,7 +485,6 @@ void UniversityDataBase::loadFromFile(const std::string& university_DataBase) {
 
     personMap.clear();
     std::string line;
-
     std::string name, surname, address, zipcode, city, nationality, indexNumber, pesel, genderStr, employeeJob;
     size_t day = 0, month = 0, year = 0;
     Gender gender = Gender::Unknown;
@@ -472,52 +492,30 @@ void UniversityDataBase::loadFromFile(const std::string& university_DataBase) {
     bool isEmployee = false;
 
     while (std::getline(dataBase, line)) {
-        if (line.empty() || line == "----------------------------------") {
+        if (line == "Student") {
+            isEmployee = false;
+        } else if (line == "Employee") {
+            isEmployee = true;
+        } else if (line.empty() || line == "----------------------------------") {
             continue;
         }
 
+        //parse fields for both students and employees
         if (line.find("Name: ") == 0) {
             name = line.substr(6);
-        }
-        std::getline(dataBase, line);  // get surname
-        if (line.find("Surname: ") == 0) {
+        } else if (line.find("Surname: ") == 0) {
             surname = line.substr(9);
-        }
-        std::getline(dataBase, line);  // get birth date
-        if (line.find("Birth date: ") == 0) {
-            std::sscanf(line.c_str(), "Birth date: %zu-%zu-%zu", &day, &month, &year);
-        } else if (line.find("Employee Position: ") == 0) {
-            employeeJob = line.substr(18);
-            isEmployee = true;
-        }    
-        std::getline(dataBase, line);  // get address
-        if (line.find("Address: ") == 0) {
+        } else if (line.find("Address: ") == 0) {
             address = line.substr(9);
-        }
-        std::getline(dataBase, line);  // get zipcode
-        if (line.find("Zipcode: ") == 0) {
+        } else if (line.find("Zipcode: ") == 0) {
             zipcode = line.substr(9);
-        }
-        std::getline(dataBase, line);  // get city
-        if (line.find("City: ") == 0) {
+        } else if (line.find("City: ") == 0) {
             city = line.substr(6);
-        }
-        std::getline(dataBase, line);  // get nationality
-        if (line.find("Nationality: ") == 0) {
+        } else if (line.find("Nationality: ") == 0) {
             nationality = line.substr(13);
-        }
-        std::getline(dataBase, line); // get index number
-        if (isEmployee && line.find("Salary: ") == 0) {
-            salary = std::stod(line.substr(8));
-        } else if (!isEmployee && line.find("Index Number: ") == 0) {
-                indexNumber = line.substr(14);
-        }
-        std::getline(dataBase, line);  // get pesel
-        if (line.find("Pesel: ") == 0) {
+        } else if (line.find("Pesel: ") == 0) {
             pesel = line.substr(7);
-        }
-        std::getline(dataBase, line);  // get gender
-        if (line.find("Gender: ") == 0) {
+        } else if (line.find("Gender: ") == 0) {
             genderStr = line.substr(8);
             if (genderStr == "Male") {
                 gender = Gender::Male;
@@ -526,7 +524,23 @@ void UniversityDataBase::loadFromFile(const std::string& university_DataBase) {
             } else {
                 gender = Gender::Unknown;
             }
-        } else if (line == "----------------------------------") {
+        } 
+        //parse specific fields for employees or students
+        if (isEmployee) {
+            if (line.find("Employee Position: ") == 0) {
+                employeeJob = line.substr(18); 
+            } else if (line.find("Salary: ") == 0) {
+            salary = std::stod(line.substr(8));
+            }
+        } else {
+            if (line.find("Birth date: ") == 0) {
+                std::sscanf(line.c_str(), "Birth date: %zu-%zu-%zu", &day, &month, &year);
+            } else if (line.find("Index Number: ") == 0) {
+                indexNumber = line.substr(14);
+            }
+        }
+        //create either a student or employee
+        if (line == "----------------------------------") {
             if (isEmployee) {
                 auto employee = std::make_shared<Employee>(employeeJob, name, surname, address, zipcode, city, nationality, pesel, salary, gender);
                 personMap[pesel] = employee;
