@@ -440,12 +440,13 @@ void UniversityDataBase::saveToFile(const std::string& university_DataBase) cons
         throw std::runtime_error("could not open file for writing");
     }
 
+    dataBase << "=========== UNIVERSITY DATABASE ===========\n"; 
+    dataBase << "STUDENTS LIST:\n\n";
+    //iterate through personMap and print student infos
     for (const auto& pair : personMap) {
         std::shared_ptr<Student> student = std::dynamic_pointer_cast<Student>(pair.second);
-        std::shared_ptr<Employee> employee = std::dynamic_pointer_cast<Employee>(pair.second);
 
         if (student) {
-            dataBase << "Student\n";
             dataBase << "Name: " << student->getName() << "\n"
                      << "Surname: " << student->getSurname() << "\n"
                      << "Address: " << student->getAddress() << "\n"
@@ -455,10 +456,16 @@ void UniversityDataBase::saveToFile(const std::string& university_DataBase) cons
                      << "Pesel: " << student->getPesel() << "\n"
                      << "Gender: " << (student->getGender() == Gender::Male ? "Male" : student->getGender() == Gender::Female ? "Female" : "Unknown") << "\n"
                      << "Birth date: " << student->getDay() << "-" << student->getMonth() << "-" << student->getYear() << "\n"
-                     << "Index Number: " << student->getIndexNumber() << "\n"
+                     << "Index Number: " << student->getIndexNumber() << "\n\n"
                      << "----------------------------------" << "\n";
-        } else if (employee) {
-            dataBase << "Employee\n";
+        }
+    }
+    dataBase << "EMPLOYEES LIST:\n\n";
+    //iterate through personMap and print employees infos
+    for (const auto& pair : personMap) {
+        std::shared_ptr<Employee> employee = std::dynamic_pointer_cast<Employee>(pair.second);
+
+        if (employee) {
             dataBase << "Name: " << employee->getName() << "\n"
                      << "Surname: " << employee->getSurname() << "\n"
                      << "Address: " << employee->getAddress() << "\n"
@@ -468,11 +475,15 @@ void UniversityDataBase::saveToFile(const std::string& university_DataBase) cons
                      << "Pesel: " << employee->getPesel() << "\n"
                      << "Gender: " << (employee->getGender() == Gender::Male ? "Male" : employee->getGender() == Gender::Female ? "Female" : "Unknown") << "\n"
                      << "Employee Position: " << employee->getEmployeeJob() << "\n"
-                     << "Salary: " << employee->getSalary() << "\n"
+                     << "Salary: " << employee->getSalary() << "€\n\n"
                      << "----------------------------------" << "\n";
         }
     }
-    std::cout << "Database saved to " << university_DataBase << std::endl;
+    if (dataBase.good()) {
+        std::cout << "Database saved to " << university_DataBase << std::endl;
+    } else {
+        throw std::runtime_error("error occurred during file writing");
+    }
     std::cout << std::endl;
 }
 
@@ -491,15 +502,22 @@ void UniversityDataBase::loadFromFile(const std::string& university_DataBase) {
     double salary = 0.0;
     bool isEmployee = false;
 
+    //ignore "=========== UNIVERSITY DATABASE ==========="
+    std::getline(dataBase, line); 
+
     while (std::getline(dataBase, line)) {
-        if (line == "Student") {
+        //detect the section for students or employees
+        if (line == "STUDENTS LIST:") {
             isEmployee = false;
-        } else if (line == "Employee") {
+            std::cout << "Processing students.." << std::endl;
+            continue; //move to the next line
+        } else if (line == "EMPLOYEES LIST:") {
             isEmployee = true;
+            std::cout << "Processing employees..." << std::endl;
+            continue; //move to the next line
         } else if (line.empty() || line == "----------------------------------") {
             continue;
         }
-
         //parse fields for both students and employees
         if (line.find("Name: ") == 0) {
             name = line.substr(6);
@@ -507,7 +525,7 @@ void UniversityDataBase::loadFromFile(const std::string& university_DataBase) {
             surname = line.substr(9);
         } else if (line.find("Address: ") == 0) {
             address = line.substr(9);
-        } else if (line.find("Zipcode: ") == 0) {
+        } else if (line.find("ZipCode: ") == 0) {
             zipcode = line.substr(9);
         } else if (line.find("City: ") == 0) {
             city = line.substr(6);
@@ -530,7 +548,11 @@ void UniversityDataBase::loadFromFile(const std::string& university_DataBase) {
             if (line.find("Employee Position: ") == 0) {
                 employeeJob = line.substr(18); 
             } else if (line.find("Salary: ") == 0) {
-            salary = std::stod(line.substr(8));
+                try {
+                    salary = std::stod(line.substr(8));
+                } catch (const std::exception& e) {
+                    std::cerr << "Error parsing salary fro employee: " << name << " " << surname << std::endl;
+                }  
             }
         } else {
             if (line.find("Birth date: ") == 0) {
@@ -542,11 +564,21 @@ void UniversityDataBase::loadFromFile(const std::string& university_DataBase) {
         //create either a student or employee
         if (line == "----------------------------------") {
             if (isEmployee) {
+                if (name.empty() || surname.empty() || pesel.empty() || employeeJob.empty()) {
+                    std::cerr << "Error: Missing data for employee. Skipping entry." << std::endl;
+                    continue;
+                }
                 auto employee = std::make_shared<Employee>(employeeJob, name, surname, address, zipcode, city, nationality, pesel, salary, gender);
                 personMap[pesel] = employee;
+                std::cout << "Loaded Employee: " << name << " " << surname << std::endl;
             } else {
+                if (name.empty() || surname.empty() || indexNumber.empty() || pesel.empty()) {
+                   std::cerr << "Error: Missing data for student. Skipping entry." << std::endl;
+                    continue; 
+                }
                 auto student = std::make_shared<Student>(name, surname, day, month, year, address, zipcode, city, nationality, indexNumber, pesel, gender);
                 personMap[indexNumber] = student;
+                std::cout << "Loaded Student: " << name << " " << surname << std::endl;
             }
             // Reset values for next record
             name.clear();
@@ -565,6 +597,27 @@ void UniversityDataBase::loadFromFile(const std::string& university_DataBase) {
             isEmployee = false;
         }
     }
+    //handle the last record if not followed by a separator
+    if (!name.empty()) {
+        if (isEmployee) {
+            if (!employeeJob.empty() && !pesel.empty()) {
+                auto employee = std::make_shared<Employee>(employeeJob, name, surname, address, zipcode, city, nationality, pesel, salary, gender);
+                personMap[pesel] = employee;
+                std::cout << "Loaded last Employee: " << name << " " << surname << std::endl;   
+            } else {
+                std::cerr << "Error: Inclomplete data for the last employee. Skipping entry." << std::endl;
+            }
+        } else {
+            if (!indexNumber.empty() && !pesel.empty()) {
+                auto student = std::make_shared<Student>(name, surname, day, month, year, address, zipcode, city, nationality, indexNumber, pesel, gender);
+                personMap[indexNumber] = student;
+                std::cout << "Loaded last Student: " << name << " " << surname << std::endl;
+            } else {
+                std::cerr << "Error: Inclomplete data for the last student. Skipping entry." << std::endl;
+            } 
+        }
+    }
+
     std::cout << "Database loaded from: " << university_DataBase << std::endl;
     std::cout << std::endl;
 }
@@ -579,3 +632,5 @@ std::string UniversityDataBase::generateUniqueKey() {
     } while (personMap.find(uniqueKey) != personMap.end());
     return uniqueKey;
 }
+
+

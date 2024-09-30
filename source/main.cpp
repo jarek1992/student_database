@@ -197,6 +197,7 @@ int main() {
                                   city, nationality, indexNumber, pesel, gender));
             std::cout << std::endl;
             std::cout << "student added successfully to database!" << std::endl;
+            std::cout << "Student Details: " << name << ", Surname: " << surname << std::endl; // Added confirmation
             std::cout << std::endl;
             break;
         }
