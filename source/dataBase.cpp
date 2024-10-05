@@ -442,6 +442,7 @@ void UniversityDataBase::saveToFile(const std::string& university_DataBase) cons
 
     dataBase << "=========== UNIVERSITY DATABASE ===========\n"; 
     dataBase << "STUDENTS LIST:\n\n";
+
     //iterate through personMap and print student infos
     for (const auto& pair : personMap) {
         std::shared_ptr<Student> student = std::dynamic_pointer_cast<Student>(pair.second);
@@ -461,6 +462,7 @@ void UniversityDataBase::saveToFile(const std::string& university_DataBase) cons
         }
     }
     dataBase << "EMPLOYEES LIST:\n\n";
+
     //iterate through personMap and print employees infos
     for (const auto& pair : personMap) {
         std::shared_ptr<Employee> employee = std::dynamic_pointer_cast<Employee>(pair.second);
@@ -516,6 +518,32 @@ void UniversityDataBase::loadFromFile(const std::string& university_DataBase) {
             std::cout << "Processing employees..." << std::endl;
             continue; //move to the next line
         } else if (line.empty() || line == "----------------------------------") {
+            if (!name.empty()) {
+                if (isEmployee && !employeeJob.empty()) {
+                    auto employee = std::make_shared<Employee>(employeeJob, name, surname, address, zipcode, city, nationality, pesel, salary, gender);
+                    personMap[pesel] = employee;
+                    std::cout << "Loaded Employee: " << name << " " << surname << std::endl;
+                } else if (!isEmployee && !indexNumber.empty()) {
+                    auto student = std::make_shared<Student>(name, surname, day, month, year, address, zipcode, city, nationality, indexNumber, pesel, gender);
+                    personMap[indexNumber] = student;
+                    std::cout << "Loaded Student: " << name << " " << surname << std::endl;
+                
+                }
+            }
+            // Reset values for next record
+            name.clear();
+            surname.clear();
+            address.clear();
+            zipcode.clear();
+            city.clear();
+            nationality.clear();
+            indexNumber.clear();
+            pesel.clear();
+            employeeJob.clear();
+            genderStr.clear();
+            day = month = year = 0;
+            salary = 0.0;
+            gender = Gender::Unknown;
             continue;
         }
         //parse fields for both students and employees
@@ -548,11 +576,7 @@ void UniversityDataBase::loadFromFile(const std::string& university_DataBase) {
             if (line.find("Employee Position: ") == 0) {
                 employeeJob = line.substr(18); 
             } else if (line.find("Salary: ") == 0) {
-                try {
-                    salary = std::stod(line.substr(8));
-                } catch (const std::exception& e) {
-                    std::cerr << "Error parsing salary fro employee: " << name << " " << surname << std::endl;
-                }  
+                salary = std::stod(line.substr(8));
             }
         } else {
             if (line.find("Birth date: ") == 0) {
@@ -561,63 +585,7 @@ void UniversityDataBase::loadFromFile(const std::string& university_DataBase) {
                 indexNumber = line.substr(14);
             }
         }
-        //create either a student or employee
-        if (line == "----------------------------------") {
-            if (isEmployee) {
-                if (name.empty() || surname.empty() || pesel.empty() || employeeJob.empty()) {
-                    std::cerr << "Error: Missing data for employee. Skipping entry." << std::endl;
-                    continue;
-                }
-                auto employee = std::make_shared<Employee>(employeeJob, name, surname, address, zipcode, city, nationality, pesel, salary, gender);
-                personMap[pesel] = employee;
-                std::cout << "Loaded Employee: " << name << " " << surname << std::endl;
-            } else {
-                if (name.empty() || surname.empty() || indexNumber.empty() || pesel.empty()) {
-                   std::cerr << "Error: Missing data for student. Skipping entry." << std::endl;
-                    continue; 
-                }
-                auto student = std::make_shared<Student>(name, surname, day, month, year, address, zipcode, city, nationality, indexNumber, pesel, gender);
-                personMap[indexNumber] = student;
-                std::cout << "Loaded Student: " << name << " " << surname << std::endl;
-            }
-            // Reset values for next record
-            name.clear();
-            surname.clear();
-            address.clear();
-            zipcode.clear();
-            city.clear();
-            nationality.clear();
-            indexNumber.clear();
-            pesel.clear();
-            employeeJob.clear();
-            genderStr.clear();
-            day = month = year = 0;
-            salary = 0.0;
-            gender = Gender::Unknown;
-            isEmployee = false;
-        }
     }
-    //handle the last record if not followed by a separator
-    if (!name.empty()) {
-        if (isEmployee) {
-            if (!employeeJob.empty() && !pesel.empty()) {
-                auto employee = std::make_shared<Employee>(employeeJob, name, surname, address, zipcode, city, nationality, pesel, salary, gender);
-                personMap[pesel] = employee;
-                std::cout << "Loaded last Employee: " << name << " " << surname << std::endl;   
-            } else {
-                std::cerr << "Error: Inclomplete data for the last employee. Skipping entry." << std::endl;
-            }
-        } else {
-            if (!indexNumber.empty() && !pesel.empty()) {
-                auto student = std::make_shared<Student>(name, surname, day, month, year, address, zipcode, city, nationality, indexNumber, pesel, gender);
-                personMap[indexNumber] = student;
-                std::cout << "Loaded last Student: " << name << " " << surname << std::endl;
-            } else {
-                std::cerr << "Error: Inclomplete data for the last student. Skipping entry." << std::endl;
-            } 
-        }
-    }
-
     std::cout << "Database loaded from: " << university_DataBase << std::endl;
     std::cout << std::endl;
 }

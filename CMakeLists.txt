@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.11.0)
-project(univesity_database)
+project(univesity_Database)
 
 set(CMAKE CMAKE_CXX_STANDARD 17)
 set(CMAKE CMAKE_CXX_STANDARD_REQUIRED ON)
